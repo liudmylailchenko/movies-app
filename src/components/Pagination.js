@@ -5,7 +5,7 @@ import ArrowForward from '@material-ui/icons/ArrowForwardIos';
 import { Typography, Button } from '@material-ui/core';
 
 const Wrapper = styled.div`
-  margin: 24px 0;
+  margin: 24px auto;
   display: flex;
   justify-content: center;
   align-items: center;

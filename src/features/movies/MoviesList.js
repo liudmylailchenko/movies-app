@@ -4,7 +4,7 @@ import Grid from '@material-ui/core/Grid';
 import { MovieItem } from './MovieItem';
 
 const Wrapper = styled.div`
-  margin: 24px 0;
+  margin-bottom: 24px;
 `;
 
 export const MoviesList = ({ movies }) => {

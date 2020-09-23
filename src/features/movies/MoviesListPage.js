@@ -3,40 +3,45 @@ import { useSelector, useDispatch } from 'react-redux';
 import { MoviesList } from './MoviesList';
 import { Pagination } from '../../components/Pagination';
 import { getMoviesList } from './moviesSlice';
+import { Error } from '../../components/Error';
+import { useSearch, useUpdateSearch } from '../../hooks/useSearch';
 
 const ITEMS_PER_PAGE = 10;
 
 export const MoviesListPage = () => {
   const dispatch = useDispatch();
-  const { list: movies, error, searchParams, totalResults } = useSelector(
+  const searchParams = useSearch();
+  const updateSearchParams = useUpdateSearch();
+
+  const { list: movies, error, totalResults } = useSelector(
     (state) => state.movies,
   );
 
   const handlePageChange = useCallback(
     (page) => {
-      dispatch(getMoviesList({ page }));
+      updateSearchParams({ ...searchParams, page });
     },
-    [dispatch],
+    [updateSearchParams, searchParams],
   );
 
   useEffect(() => {
-    dispatch(getMoviesList());
-  }, [dispatch]);
+    dispatch(getMoviesList(searchParams));
+  }, [dispatch, searchParams]);
 
-  if (error) {
-    return <span>{error}</span>;
+  if (error && movies.length === 0) {
+    return (
+      <Error>No movies found. Please try to change your search criteria.</Error>
+    );
   }
 
-  return movies.length > 0 ? (
-    <>
+  return (
+    <div>
       <MoviesList movies={movies} />
       <Pagination
         page={searchParams.page}
         totalPages={Math.ceil(totalResults / ITEMS_PER_PAGE)}
         onChange={handlePageChange}
       />
-    </>
-  ) : (
-    <span>No movies found. Please improve your search params.</span>
+    </div>
   );
 };

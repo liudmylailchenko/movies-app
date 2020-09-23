@@ -1,11 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Router } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { StylesProvider, ThemeProvider } from '@material-ui/core/styles';
 import { CssBaseline, createMuiTheme } from '@material-ui/core';
 import { blue, pink } from '@material-ui/core/colors';
 import { store } from './utils/store';
 import App from './App';
+import { history } from './utils/history';
 
 const theme = createMuiTheme({
   palette: {
@@ -25,7 +27,9 @@ ReactDOM.render(
       <ThemeProvider theme={theme}>
         <StylesProvider injectFirst>
           <CssBaseline />
-          <App />
+          <Router history={history}>
+            <App />
+          </Router>
         </StylesProvider>
       </ThemeProvider>
     </Provider>

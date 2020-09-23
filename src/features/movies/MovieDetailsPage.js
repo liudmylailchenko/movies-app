@@ -5,11 +5,12 @@ import styled from 'styled-components/macro';
 import { Paper, Typography, Button } from '@material-ui/core';
 import ArrowLeft from '@material-ui/icons/KeyboardBackspace';
 import { getMovie } from './moviesSlice';
+import { Error } from '../../components/Error';
 
 const Wrapper = styled(Paper)`
   display: flex;
   padding: 24px 0;
-  margin-top: 12px;
+  margin-bottom: 12px;
 `;
 
 const Image = styled.img`
@@ -40,7 +41,7 @@ export const MovieDetailsPage = () => {
   }, [dispatch, id]);
 
   if (error) {
-    return <span>{error}</span>;
+    return <Error>{error}</Error>;
   }
 
   if (loading || !movie) {
@@ -48,10 +49,7 @@ export const MovieDetailsPage = () => {
   }
 
   return (
-    <>
-      <Button component={Link} to="/" startIcon={<ArrowLeft />}>
-        Back to home
-      </Button>
+    <div>
       <Wrapper elevation={6}>
         <ImageContainer>
           <Image src={movie.Poster} />
@@ -84,6 +82,9 @@ export const MovieDetailsPage = () => {
           </Typography>
         </InfoContainer>
       </Wrapper>
-    </>
+      <Button component={Link} to="/" startIcon={<ArrowLeft />}>
+        Back to home
+      </Button>
+    </div>
   );
 };

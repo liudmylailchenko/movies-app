@@ -1,13 +1,14 @@
 import React, { useCallback } from 'react';
+import { useDispatch } from 'react-redux';
 import { Formik, Form, Field } from 'formik';
-import styled from 'styled-components/macro';
 import * as yup from 'yup';
+import styled from 'styled-components/macro';
 import SearchIcon from '@material-ui/icons/Search';
-import { Button, Paper } from '@material-ui/core';
+import { Button, Paper, Typography } from '@material-ui/core';
 import { SelectFormik } from '../../components/formElements/SelectFormik';
 import { TextFieldFormik } from '../../components/formElements/TextFieldFormik';
-import { useSelector, useDispatch } from 'react-redux';
-import { getMoviesList } from './moviesSlice';
+import { useSearch, useUpdateSearch } from '../../hooks/useSearch';
+import { pushSearch } from '../searches/searchesSlice';
 
 const StyledButton = styled(Button)`
   height: 55px;
@@ -16,10 +17,10 @@ const StyledButton = styled(Button)`
 const FormContainer = styled(Paper)`
   display: grid;
   grid-gap: 16px;
-  grid-template-columns: 1fr 1fr 1fr auto;
+  grid-template-rows: 1fr 2fr 2fr 2fr auto;
   align-items: flex-start;
   padding: 32px 16px;
-  margin: 24px 0;
+  margin-bottom: 24px;
 `;
 
 const movieTypeOptions = [
@@ -35,16 +36,18 @@ const validationSchema = yup.object().shape({
 
 export const FilterForm = () => {
   const dispatch = useDispatch();
-  const { title, type, year } = useSelector(
-    (state) => state.movies.searchParams,
-  );
+  const { title, type, year } = useSearch();
+  const updateSearchParams = useUpdateSearch();
 
   const handleSubmit = useCallback(
     (params) => {
+      const nextParams = { ...params, page: 1 };
       // Go to the first page every time search criteria changes
-      dispatch(getMoviesList({ ...params, page: 1 }));
+      updateSearchParams(nextParams);
+      // Push new search to the searches history
+      dispatch(pushSearch(nextParams));
     },
-    [dispatch],
+    [updateSearchParams, dispatch],
   );
 
   return (
@@ -59,6 +62,7 @@ export const FilterForm = () => {
     >
       <Form autoComplete="off">
         <FormContainer>
+          <Typography variant="h6">Search:</Typography>
           <Field
             name="title"
             component={TextFieldFormik}
@@ -73,9 +77,6 @@ export const FilterForm = () => {
             variant="outlined"
             options={movieTypeOptions}
             helperText="Select the type of film to search"
-            InputLabelProps={{
-              shrink: true,
-            }}
           />
           <Field
             name="year"

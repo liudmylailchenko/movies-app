@@ -1,11 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import qs from 'querystring';
 import { apiCall } from '../../utils/apiCall';
-import { history } from '../../utils/history';
-
-// Parse query params from location
-// making sure we done include leading `?`
-const searchParams = qs.parse(history.location.search.replace(/^\?/, ''));
 
 const moviesSlice = createSlice({
   name: 'movies',
@@ -14,19 +8,10 @@ const moviesSlice = createSlice({
     error: null,
     list: [],
     single: null,
-    searchParams: {
-      title: searchParams.title || '',
-      type: searchParams.type || '',
-      year: searchParams.year || '',
-      page: parseInt(searchParams.page) || 1,
-    },
     totalResults: 0,
   },
 
   reducers: {
-    updateSearchParams: (state, { payload }) => {
-      state.searchParams = { ...state.searchParams, ...payload };
-    },
     getListStart: (state) => {
       state.loading = true;
       state.error = null;
@@ -39,6 +24,7 @@ const moviesSlice = createSlice({
     getListFailure: (state, { payload }) => {
       state.loading = false;
       state.error = payload;
+      state.list = [];
     },
     getSingleStart: (state) => {
       state.loading = true;
@@ -59,7 +45,6 @@ const moviesSlice = createSlice({
  * Action creators
  */
 const {
-  updateSearchParams,
   getListStart,
   getListSuccess,
   getListFailure,
@@ -71,19 +56,12 @@ const {
 /**
  * Fetch list of movies by provided search criteria
  */
-export const getMoviesList = (params = {}) => {
+export const getMoviesList = (params) => {
   return async (dispatch, getState) => {
-    dispatch(updateSearchParams(params));
     dispatch(getListStart());
 
     try {
-      const { title, type, year, page } = getState().movies.searchParams;
-
-      // Since `title` is a required param, no need to update
-      // url when it's not provided
-      if (title) {
-        history.push(`/?${qs.stringify({ title, type, year, page })}`);
-      }
+      const { title, type, year, page } = params;
 
       const response = await apiCall.request({
         params: {
