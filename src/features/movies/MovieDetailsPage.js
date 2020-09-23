@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import styled from 'styled-components/macro';
 import { Paper, Typography, Button } from '@material-ui/core';
 import ArrowLeft from '@material-ui/icons/KeyboardBackspace';
 import { getMovie } from './moviesSlice';
 import { Error } from '../../components/Error';
+import { PreserveSearchLink } from '../../components/PreserveSearchLink';
 
 const Wrapper = styled(Paper)`
   display: flex;
@@ -82,7 +83,7 @@ export const MovieDetailsPage = () => {
           </Typography>
         </InfoContainer>
       </Wrapper>
-      <Button component={Link} to="/" startIcon={<ArrowLeft />}>
+      <Button component={PreserveSearchLink} to="/" startIcon={<ArrowLeft />}>
         Back to home
       </Button>
     </div>

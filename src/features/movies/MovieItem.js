@@ -1,8 +1,8 @@
 import React, { useState, useCallback } from 'react';
-import { Link, useHistory } from 'react-router-dom';
 import styled from 'styled-components/macro';
 import { Paper } from '@material-ui/core';
 import ImageIcon from '@material-ui/icons/Image';
+import { PreserveSearchLink } from '../../components/PreserveSearchLink';
 
 const Wrapper = styled(Paper)`
   display: block;
@@ -37,9 +37,8 @@ const MovieTitle = styled.p`
   text-align: center;
 `;
 
-export const MovieItem = ({ Title, Year, imdbID, Type, Poster }) => {
+export const MovieItem = ({ Title, Year, imdbID, Poster }) => {
   const [hovered, setHovered] = useState(false);
-  const { location } = useHistory();
 
   const handleOnMouseOver = useCallback(() => {
     setHovered(true);
@@ -52,10 +51,10 @@ export const MovieItem = ({ Title, Year, imdbID, Type, Poster }) => {
   return (
     <Wrapper
       elevation={hovered ? 6 : 1}
-      component={Link}
+      component={PreserveSearchLink}
       // Save query params during navigation
       // so that we can preserve state after page refresh
-      to={{ pathname: `/${imdbID}`, search: location.search }}
+      to={`/${imdbID}`}
       onMouseOver={handleOnMouseOver}
       onMouseOut={handleOnMouseOut}
     >
