@@ -1,25 +1,37 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { useSelector } from 'react-redux';
+import { Router, Route, Switch } from 'react-router-dom';
+import styled from 'styled-components/macro';
+import { Container, Backdrop, CircularProgress } from '@material-ui/core';
+import { history } from './utils/history';
+import { MoviesListPage } from './features/movies/MoviesListPage';
+import { MovieDetailsPage } from './features/movies/MovieDetailsPage';
+import { FilterForm } from './features/movies/FilterForm';
+
+const StyledContainer = styled(Container)`
+  margin-top: 48px;
+  margin-bottom: 48px;
+`;
+const StyledBackdrop = styled(Backdrop)`
+  z-index: 1000;
+  color: '#fff';
+`;
 
 function App() {
+  const { loading } = useSelector((state) => state.movies);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <StyledContainer maxWidth="lg">
+      <StyledBackdrop open={loading}>
+        <CircularProgress color="inherit" />
+      </StyledBackdrop>
+      <FilterForm />
+      <Router history={history}>
+        <Switch>
+          <Route path="/" component={MoviesListPage} exact />
+          <Route path="/:id" component={MovieDetailsPage} exact />
+        </Switch>
+      </Router>
+    </StyledContainer>
   );
 }
 

@@ -1,17 +1,34 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
+import { Provider } from 'react-redux';
+import { StylesProvider, ThemeProvider } from '@material-ui/core/styles';
+import { CssBaseline, createMuiTheme } from '@material-ui/core';
+import { blue, pink } from '@material-ui/core/colors';
+import { store } from './utils/store';
 import App from './App';
-import * as serviceWorker from './serviceWorker';
+
+const theme = createMuiTheme({
+  palette: {
+    type: 'dark',
+    primary: {
+      main: blue[200],
+    },
+    secondary: {
+      main: pink[200],
+    },
+  },
+});
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <Provider store={store}>
+      <ThemeProvider theme={theme}>
+        <StylesProvider injectFirst>
+          <CssBaseline />
+          <App />
+        </StylesProvider>
+      </ThemeProvider>
+    </Provider>
   </React.StrictMode>,
-  document.getElementById('root')
+  document.getElementById('root'),
 );
-
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
