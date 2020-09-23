@@ -32,7 +32,7 @@ export const useUpdateSearch = () => {
   return useCallback(
     (nextSearch) => {
       history.push({
-        pathname: history.location.pathname,
+        pathname: '/',
         search: '?' + qs.stringify({ ...search, ...nextSearch }),
       });
     },
